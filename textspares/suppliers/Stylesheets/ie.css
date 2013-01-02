@@ -1,0 +1,9 @@
+@charset "utf-8";
+#topmenu {margin-top:12px;}
+#foot_foot {margin-top:-125px;margin-bottom:50px;}
+#domain_checker form {margin:0;}
+#menu_holder {height:50px;padding-top:10px;}
+#menu li {position:relative;z-index:100;margin:0 10px 0 1px;height:35px;line-height:35px;width:auto;}
+#menu li a {position:relative;z-index:200;height:35px;float:left;}
+#header {height:auto;padding:0;margin-top:0px;}
+#buttons { position: absolute; }

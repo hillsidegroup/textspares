@@ -1,0 +1,44 @@
+/* CSS Document */
+td{ font-family:Verdana, Arial, Helvetica, sans-serif;
+font-size:12px;
+color:#464646;
+}
+
+.myheadings{ font-family:Verdana, Arial, Helvetica, sans-serif;
+font-size:21px;
+color:#e95611;
+
+}
+
+a.leftlinks{ font-family:Verdana, Arial, Helvetica, sans-serif;
+font-size:11px;
+font-weight:bold;
+color:#2d3946;
+text-decoration:none;
+
+}
+
+a:hover.leftlinks{ font-family:Verdana, Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#5a5a5a;
+text-decoration:underline;
+
+}
+
+a.bottomlinks01{ font-family:Verdana, Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#e95611;
+text-decoration:none;
+
+}
+
+a:hover.bottomlinks01{ font-family:Verdana, Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#e95611;
+text-decoration:underline;
+
+}
+
+form{ margin:0px;
+
+}

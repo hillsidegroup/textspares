@@ -1,0 +1,10 @@
+User-agent: *
+Disallow: /customer_login.php
+Disallow: /include/
+Disallow: /supplier_login.php
+Disallow: /supplier/
+
+User-agent: TurnitinBot
+Disallow: /
+
+Sitemap: http://www.textspares.co.uk/sitemap.xml

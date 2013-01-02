@@ -1,0 +1,64 @@
+<?config_load file="include/smarty/configs/textspares.co.uk.conf" section="setup"?>
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title><?$meta.title?></title>
+	<meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
+	<meta name="subject" content="Car Parts and Used Auto Spares" />
+	<meta name="description" content="<?$meta.description?>" />
+	<meta name="keywords" content="<?$meta.keywords?>" />
+	<meta name="DC.Title" content="<?$meta.title?>" />
+	<meta name="DC.Creator" content="TextSpares - Marc A Newton" />
+	<meta name="DC.Subject" content="Comparison Website" />
+	<meta name="DC.Description" content="<?$meta.description?>" />
+	<meta name="DC.Publisher" content="oTeck Office Solutions" />
+	<meta name="DC.Date" content="2011-12-07" />
+	<meta name="DC.Type" content="Vehicle Trade" />
+	<meta name="DC.Coverage" content="53.38;-2.9" />
+	<meta name="DC.Language" content="en-GB" />
+	<meta name="DC.Resource" content="http://<?$smarty.server.SERVER_NAME?>" />
+	<meta name="ICBM" content="53.38, -2.9" />
+	<meta name="geo.position" content="53.38;-2.9" />
+	<meta name="geo.country" content="GB" />
+	<meta name="geo.placename" content="Rochdale, Lancashire, England, United Kingdom" />
+	<meta name="geo.region" content="GB-LAN" />
+	<meta itemprop="name" content="<?$meta.title?>" />
+	<meta itemprop="description" content="<?$meta.description?>" />
+	<link rel="alternate" type="application/rss+xml" title="RSS Feed" href="<?$BASE?>rssfeed.xml" />
+	<link rel="stylesheet" type="text/css" href="<?$BASE?><?$SKIN?>_style.css"/>
+	<script type="text/javascript" src="<?$BASE?>include/jquery-1.6.4.min.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function() {
+		$('.replace').addClass("grey");
+		$('.replace').focus(function() {
+			$(this).removeClass("grey");
+			if (this.value == this.defaultValue){
+				this.value = '';
+			}
+			if(this.value != this.defaultValue){
+				this.select();
+			}
+		});
+	});
+	window.___gcfg = {lang: 'en-GB'};
+	(function() {
+	var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+	po.src = 'https://apis.google.com/js/plusone.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+	})();
+	</script>
+</head>
+<body>
+<div class="header"></div>
+<div class="body-bar blue-bar">
+<?if $loggedin == true ?>
+	User is logged in.
+<?else?>
+	LOGIN TO CHECK YOUR QUOTES! &nbsp; <form action="<?$BASE?>" method="POST" class="login-bar">USERCODE or E-MAIL: <input type="text" name="_username" /> &nbsp; PASSWORD: <input type="password" name="_password" /> &nbsp; <input type="submit" name="_login" value="CHECK NOW &nbsp; &gt;" /></form>
+<?/if?>
+</div>
+<div class="body"><?if $alerts ?><?$alerts?><?/if?><div class="left-nav"><ul><?foreach from=$navigation item=link?><li><a href="<?$BASE?><?$link.seo_url?>"><?$link.link_name?></a></li><?/foreach?></ul></div><div class="content"><?include file="$content"?></div></div>
+<div class="footer"></div>
+<?$debug_window?>
+</body>
+</html>

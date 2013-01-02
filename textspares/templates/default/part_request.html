@@ -1,0 +1,212 @@
+<script src="jquery.maskedinput.js" type="text/javascript"></script>
+<script language="javascript">
+	(function( $ )
+	{
+		$startTimer = function(){setTimeout(function()
+		{
+			if($checkVehicleAll()==false && $checkCustomerAll()==false)
+			{
+				$('#form_submit').removeClass('no_submit').addClass('submit');
+			} else {
+				$('#form_submit').removeClass('submit').addClass('no_submit');
+			}
+			$startTimer();
+		},250);}
+		$disableField = function(name,toggle){ toggle ? $('#'+name).attr('disabled','disabled') :  $('#'+name).removeAttr('disabled'); }
+		$codeFormat = function(){ var value = $("#customer_postcode").val(); if(value.length == 4) { value. })
+		$checkVehicleAll = function()
+		{
+			var listFields = ['vehicle_make','vehicle_model','registration_year','fuel_system','engine_size','gearbox','body_type','parts'];
+			var disable = false;
+			
+			$.each(listFields,function(index,field)
+			{
+				$disableField(field,disable);
+				switch(field)
+				{
+					case 'vehicle_make':
+						disable = ($("#"+field).val() < 0);
+						break;
+					case 'vehicle_model':
+						if(disable) $("#"+field).html('').append('<option value="-1">Select Make</option>');
+						disable = disable ? true : (($("#"+field).val() < 0) ? true : false);
+						break;
+					case 'registration_year':
+						var value = parseInt($("#"+field).val());
+						var year = (new Date).getFullYear() + 1;
+						disable = disable ? true : ((!isNaN(value) && value >= 1950 && value <= year) ? false : true);
+						break;
+					case 'fuel_system':
+						disable = disable ? true : (($("#"+field).val() < 0) ? true : false);
+						break;
+					case 'engine_size':
+						var value = parseInt($("#"+field).val());
+						disable = disable ? true : ((!isNaN(value) && value >= 650 && value <= 5600) ? false : true);
+						break;
+					case 'gearbox':
+						disable = disable ? true : (($("#"+field).val() < 0) ? true : false);
+						break;
+					case 'body_type':
+						disable = disable ? true : (($("#"+field).val() < 0) ? true : false);
+						break;
+					case 'parts':
+						disable = disable ? true : ($('input[name="parts[]"]').length > 0) ? false : true;
+				}
+			});
+			return disable;
+		}
+		
+		$toggleVehicleMake = function()
+		{
+			$id = $("#vehicle_make").val();
+			//TODO - OTHER MAKE SELECT CHANGE TO TEXT (Write Field Swap Function)
+			$brand = $('#vehicle_make option:selected').html();
+			if($id < 0)
+			{
+				$file = '_select.gif';
+			} else {
+				$file = ($brand.toLowerCase().replace(' ','_')) + '.jpg';
+			}
+			$(".make_logo").css("background-image","url(../../images/brands/"+$file);
+			
+			if($id > 0)
+			{
+				$data = false;
+				$("#vehicle_model").html('').append('<option value="-1">Loading...</option>').attr('disabled','disabled');
+				$result = $.getJSON('apps.php?do=get_vehicle_models&model='+$id, function(call){$handle = call;});
+				$result.success(function(){ $data = $handle; });
+				$result.error(function()
+				{
+					//TODO - SWAP FROM DROP IF NOT TEXT (Field swap function)
+				});
+				$result.complete(function()
+				{
+					//TODO - IF TEXT FIELD SWAP TO DROP
+					if($data[0] == 'error')
+					{
+						$("#vehicle_model").html('').append('<option value="0">N/A</option>');
+						$checkVehicleAll();
+					} else {
+						$("#vehicle_model").html('').append('<option value="-1">Select Model</option>');
+						$.each($data,function(key,model) {
+							$("#vehicle_model").append($("<option></option>").attr("value",model['id']).text(model['name']));
+						});
+					}
+				});
+			} else {
+				//TODO - SWAP FROM DROP IF NOT TEXT (Field swap function)
+			}
+			$checkVehicleAll();
+		}
+		
+		$createItem = function(value)
+		{
+			$html = '<div class="basket-item"><input type="hidden" name="parts[]" value="' + value + '" /><div class="remove"></div><div class="text">' + value + '</div></div>';
+			return $html;
+		}
+		
+		$checkCustomerAll = function()
+		{
+			var listFields = ['customer_name','customer_email','customer_phone','customer_postcode'];
+			var disable = false;
+			
+			$.each(listFields,function(index,field)
+			{
+				$disableField(field,disable);
+				switch(field)
+				{
+					case 'customer_name':
+						disable = ($("#"+field).val().length < 2);
+						break;
+					case 'customer_postcode':
+						disable = disable ? true : (($("#"+field).val().length < 8) ? true : false);
+						break;
+				}
+			});
+			return disable;
+		}
+
+	})( jQuery );
+	
+	$(".remove").live('click',function(){
+		$(this).parents("div:first").remove();
+	});
+	
+	$(document).ready(function()
+	{
+		$startTimer();
+		
+		if($('#vehicle_make').val() > 0 && $('#vehicle_model').val() < 0) { $toggleVehicleMake(); }
+
+		$("#vehicle_make").change(function(){$toggleVehicleMake();});
+		$fbegin = 'Enter your part name here';$fanother = 'Enter another part name';$fvalue = $('#find').val();
+		function find_part_input() {if($fvalue == '') {$('#find').val($fbegin);$('#find').addClass('grey');}}find_part_input();
+		function addPart(value) {$('#basket').append($createItem(value));setTimeout(function () { $('#find').addClass('grey');$('#find').val($fanother); }, 1000);}$partsList = new Array();$('#parts > option').each(function(i) {$partsList[i] = $(this).text();});$('#find').autocomplete({source: $partsList,select: function(event,ui) {addPart(ui.item.value);}});
+		$('#find').focus(function() {$fbegin = 'Enter your part name here';$fanother = 'Enter another part name';$fvalue = $('#find').val();
+		if($fvalue == $fbegin || $fvalue == $fanother) {$('#find').removeClass('grey');$('#find').val('');}});$('#find').click(function() {$fbegin = 'Enter your part name here';$fanother = 'Enter another part name';$fvalue = $('#find').val();
+		if($fvalue == $fbegin || $fvalue == $fanother) {$('#find').removeClass('grey');$('#find').val('');}});$('#find').keydown(function() {$fbegin = 'Enter your part name here';$fanother = 'Enter another part name';$fvalue = $('#find').val();
+		if($fvalue == $fbegin || $fvalue == $fanother) {$('#find').removeClass('grey');$('#find').val('');}});$('#find').keypress(function(event) {if(event.which == 13) {event.preventDefault();if($('#find').val().length > 1) {addPart($('#find').val());}}});
+		$("#customer_name").change(function(){$checkCustomerAll();});
+		$("#customer_postcode").keyup(function(){$codeFormat();});
+	});
+</script>
+<form name="request_form" id="request_form" method="POST" action="<?$BASE?>/submit-request">
+<div class="request" id="manual-form">
+	<h3>Please tell us about your vehicle</h3>
+	<div class="item"></div>
+	<div class="make_logo"></div>
+	<div class="item-title">Reg Number</div>
+	<div class="item-right"><input type="text" name="vehicle_registration" value="<?$requested.vehicle_registration?>" /></div>
+	<div class="item-title">What Make is it?</div>
+	<div class="item-right"><select id="vehicle_make" name="vehicle_make"><option value="-1">Click to Select</option><?foreach $vehicle_makes AS $vehicle?><option value="<?$vehicle.id?>"<?if $requested.vehicle_make|lower eq $vehicle.name|lower or $requested.vehicle_make eq $vehicle.id?> selected="selected"<?/if?>><?$vehicle.name?></option><?/foreach?><option value="0">Other Make</option></select></div>
+	<div class="item-title">Model of Vehicle?</div>
+	<div class="item-right"><select id="vehicle_model" name="vehicle_model" disabled="disabled"><option value="-1">Select Make first</option></select></div>
+	<div class="item-title">Registration Year?</div>
+	<div class="item-right"><input type="text" id="registration_year" name="registration_year" value="1995" disabled="disabled" maxlength="4" /></div><br clear="all" />
+	<div class="item-title">Fuel System?</div>
+	<div class="item-right"><select id="fuel_system" name="fuel_system" disabled="disabled"><option value="-1">Select Fuel Type</option><?foreach $fuel_systems AS $fuel?><option value="<?$fuel.id?>"><?$fuel.name?></option><?/foreach?></select></div><br clear="all" />
+	<div class="item-title">Engine CC Size?</div>
+	<div class="item-right"><input id="engine_size" name="engine_size" disabled="disabled" value="2200" maxlength="4" /></div><br clear="all" />
+	<div class="item-title">Gearbox?</div>
+	<div class="item-right"><select id="gearbox" name="gearbox" disabled="disabled"><option value="-1">Select Gearbox</option><?foreach $gearboxes AS $gear?><option value="<?$gear.id?>"><?$gear.name?></option><?/foreach?></select></div><br clear="all" />
+	<div class="item-title">Body Type?</div>
+	<div class="item-right"><select id="body_type" name="body_type" disabled="disabled"><option value="-1">Select Body Type</option><?foreach $body_types AS $body?><option value="<?$body.id?>"><?$body.name?></option><?/foreach?></select></div><br clear="all" />
+	<div class="item"></div>
+</div>
+
+<div class="request">
+	<h3>Select the parts you require</h3>
+	<div class="item-title">Enter Part Name:</div>
+	<div class="item-right">
+		<input type="text" name="rawpart" value="" id="find"/>
+		<select name="listedparts" id="parts">
+		<?foreach $parts_list AS $part?>
+		<option value="<?$part.part_id?>"><?$part.part_cat_name?></option>
+		<?/foreach?>
+		</select>
+	</div>
+	<br clear="all"/>
+	<div id="basket">
+		<?if $requested.parts?>
+		<?foreach $requested.parts AS $part?><div class="basket-item"><input type="hidden" name="parts[]" value="<?$part?>" /><div class="remove"></div><div class="text"><?$part?></div></div><?/foreach?>
+		<?/if?>
+	</div>
+</div>
+
+<div class="request double">
+	<h3>Contact Information</h3>
+	<div class="item-title">Your Name:</div>
+	<div class="item-right"><input type="text" name="customer_name" id="customer_name" /></div>
+	<div class="item-title">E-Mail Address:</div>
+	<div class="item-right"><input type="text" name="customer_email" id="customer_email" /></div>
+	<div class="item-title">Contact Number:</div>
+	<div class="item-right"><input type="text" name="customer_phone" id="customer_phone" /></div>
+	<div class="item"><h4>Address Information</h4><span>Your Post Code is used to estimate delivery costs and help find you local dealers.</span></div>
+	<div class="item-title">Postal Code:</div>
+	<div class="item-right"><input type="text" name="customer_postcode" id="customer_postcode" maxlength="8"  style="width:170px;" /></div>
+	<div class="item-title">Select Country:</div>
+	<div class="item-right"><select name="customer_country" id="customer_country"><?foreach $countries AS $country?><?$country?><?/foreach?></select></div>
+</div>
+
+<div id="form_submit" class="no_submit item-title right">Submit Request</div>
+</form>

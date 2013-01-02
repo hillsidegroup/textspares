@@ -1,0 +1,10 @@
+.c_break { /* Needs Works */ height:5px;padding:0;overflow:hidden;}
+*html div.ch_intro {margin:70px 0 0 0;background:#F90;}
+.content_header img {float:right;}
+.content_header .ie_img_fix {margin-top:0;margin-right:-70px;}
+.news_block {padding:10px 0 0 0;background-image:none;}
+#bg_holder {/*background:url(../Images/StyleImages/foot_bg.jpg) center bottom repeat-x;*/}
+.domain_info {width:290px;margin:10px 0 10px 0;float:left;}
+.idx_box { margin:0 -7px 0 0; position:relative; width:290px; z-index:2; padding-bottom:0px; height:300px; padding-right:4px; }
+.content2bar { height:307px; }
+#buttons { position: absolute; margin-top:275px; }

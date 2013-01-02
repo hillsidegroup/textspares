@@ -1,0 +1,50 @@
+AddType x-mapp-php5 .php
+
+order allow,deny
+deny from 38.111.147.86
+allow from all
+
+RewriteEngine on
+
+RewriteCond %{HTTPS} =on
+RewriteRule ^(.*)$ http://textspares.co.uk/$1 [R=301,L]
+
+RewriteBase /
+RewriteRule ^MakeDetails/([^/\.]+)/([^/\.]+)?$ makedetails.php?fileid=$1&make=$2
+RewriteRule ^ModelDetails/([^/\.]+)/([^/\.]+)/([^/\.]+)?$  modeldetails.php?mid=$1&fileid=$2&model=$3
+RewriteRule ^Engine/([^/\.]+)/?$  engine.php?fileid=$1
+RewriteRule ^Gearbox/([^/\.]+)/?$  gearbox.php?fileid=$1
+RewriteRule ^Details/([^/\.]+)/([^/\.]+)?$  details.php?fileid=$1
+RewriteRule ^FreeQuotes/?$ index.php
+RewriteRule ^FreeQuotes/([^/\.]+)/?$ index.php?data=$1
+RewriteRule ^FreeQuotes/([^/\.]+)/([^/\.]+)?$ index.php?data=$1&area=$2
+RewriteRule ^CarSpares/?$ index.php
+RewriteRule ^CarSpares/([^/\.]+)/?$ index.php?data=$1
+RewriteRule ^CarSpares/([^/\.]+)/([^/\.]+)?$ index.php?data=$1&area=$2
+RewriteRule ^carspares/?$ index.php
+RewriteRule ^carspares/([^/\.]+)/?$ index.php?data=$1
+RewriteRule ^carspares/([^/\.]+)/([^/\.]+)?$ index.php?data=$1&area=$2
+
+RedirectMatch 403 /include/(.*)\.php$
+RedirectMatch 403 /admin/include/(.*)\.php$
+
+#Remove XSS ATTACK
+RewriteCond %{QUERY_STRING} base64_encode.*\(.*\) [OR]
+RewriteCond %{QUERY_STRING} (\<|%3C).*script.*(\>|%3E) [NC,OR]
+RewriteCond %{QUERY_STRING} (\<|%3C).*iframe.*(\>|%3E) [NC,OR]
+RewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]
+RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2})
+RewriteRule ^(.*)$ log.php [NC]
+RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+RewriteRule .* - [F]
+
+#Remove SQL INJECTION ATTACK
+RewriteCond %{QUERY_STRING} ("|%22).*(>|%3E|<|%3C).* [NC]
+RewriteRule ^(.*)$ log.php [NC]
+RewriteCond %{QUERY_STRING} (<|%3C).*script.*(>|%3E) [NC]
+RewriteRule ^(.*)$ log.php [NC]
+RewriteCond %{QUERY_STRING} (javascript:).*(;).* [NC]
+RewriteRule ^(.*)$ log.php [NC]
+RewriteCond %{QUERY_STRING} (;|'|"|%22).*(union|select|insert|drop|update|md5|benchmark|or|and|if).* [NC]
+RewriteRule ^(.*)$ log.php [NC]
+RewriteRule (,|;|<|>|'|`) /log.php [NC]
